@@ -1,0 +1,24 @@
+dimensions:
+  width: &width 1000
+  height: &height 1000
+
+Page size: 
+  width: *width
+  height: *height
+  Page Height: test
+  pageName : {
+    test: 100,
+    nested class: {another nested class: {attr: 100}}
+  }
+
+  page_name_2 !dict: {this_is a dict: 100}
+  page_name_3    : another
+  should load:
+    time: true
+    weather: false
+
+top level: 2
+top_ level 2 !dict:
+  a: 1
+  b: 4
+  c : test

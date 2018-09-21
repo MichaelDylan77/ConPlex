@@ -1,0 +1,25 @@
+{
+    "active": "more_info",
+    "modules": [
+        {
+            "case_correction": true,
+            "name": "example",
+            "yaml_name": "example.yaml",
+            "yaml_path": "example.yaml"
+        },
+        {
+            "case_correction": false,
+            "name": "another_one",
+            "yaml_name": "example.yaml",
+            "yaml_path": "example.yaml"
+        },
+        {
+            "case_correction": true,
+            "name": "more_info",
+            "num_classes": 2,
+            "num_variables": 2,
+            "yaml_name": "example.yaml",
+            "yaml_path": "example.yaml"
+        }
+    ]
+}
