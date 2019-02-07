@@ -23,6 +23,7 @@ def sort_dict_last(x):
     other.update(dicts)
     return other
 
+
 def find_acronyms(x):
     return findall(r'\b[A-Z]*[A-Z]\b\.?', x)
 
@@ -74,19 +75,19 @@ def snake_case(x):
     for i, char in enumerate(x):
         if char.isupper():
             # Get the next and previous characters for later use
-            next = x[i + 1]
-            previous = x[i - 1]
+            next_char = x[i + 1]
+            previous_char = x[i - 1]
             if not i == 0:  # Check if we are not at the first character
-                if previous.islower():
+                if previous_char.islower():
                     out += '_'
-                    if next.islower() or next == '_':
+                    if next_char.islower() or next_char == '_':
                         out += char.lower()
                         continue
-                elif previous == '_':
-                    if next.islower() or next == '_':
+                elif previous_char == '_':
+                    if next_char.islower() or next_char == '_':
                         out += char.lower()
                         continue
-            elif next.isupper():
+            elif next_char.isupper():
                 out += char
                 continue
             else:

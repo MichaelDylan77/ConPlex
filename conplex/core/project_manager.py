@@ -4,7 +4,7 @@ from os import path, listdir, mkdir
 import PrintTags as pt
 import json
 
-from .generator import Generator
+from .yaml_converter import YAMLConverter
 
 
 def singleton(cls):
@@ -30,7 +30,7 @@ class ProjectManager(object):
     Manages and creates ConPlex projects and their .conplex file
     """
 
-    # TODO: Setup locking on project file
+    # TODO: Setup lock on project file
 
     __project_path = './.conplex'
 
@@ -57,10 +57,9 @@ class ProjectManager(object):
             with open(self.__project_path, 'w+') as project_file:
                 json_data = json.dumps(project_data, indent=4, sort_keys=True)
                 project_file.write(json_data)
+                self.project_data = project_data
         except IOError as e:
             pt.error(e)
-        finally:
-            self.project_data = project_data
 
     def __load_project_data(self):
 
@@ -119,11 +118,10 @@ class ProjectManager(object):
             set_active: Whether or not this should be set as the active module
         """
 
-        yaml_path = options['yaml_path']
-        generator = Generator(options['yaml_path'],
-                              module_name=options['name'],
-                              case_correction=options['case_correction'],
-                              silent=True)
+        generator = YAMLConverter(options['yaml_path'],
+                                  module_name=options['name'],
+                                  case_correction=options['case_correction'],
+                                  silent=True)
         num_classes, num_variables = generator()
         options['num_classes'] = num_classes
         options['num_variables'] = num_variables

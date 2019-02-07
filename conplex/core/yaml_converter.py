@@ -6,7 +6,7 @@ import PrintTags as pt
 from sys import exit
 
 
-class Generator(object):
+class YAMLConverter(object):
 
     # TODO: Make sure the output module automatically gets placed into the same directory as the yaml file
 
