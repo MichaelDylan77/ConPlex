@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from os import path, makedirs
-from .utils import upper_camel_case, snake_case, sort_dict_last
+from conplex.core.utils import upper_camel_case, snake_case, sort_dict_last
 import PrintTags as pt
 from sys import exit
 

@@ -2,60 +2,11 @@
 
 import PrintTags as pt
 from os import getcwd, path
-from sys import stdout
-from ..project_manager import ProjectManager
+from conplex.core.project_manager import ProjectManager
+from .utils import query_yes_no, validate_module_name
 
 
-def validate_module_name(module_name):
-
-    """
-    Checks if the given name is acceptable as a module name
-
-    args:
-        module_name: A string containing the name to be updated
-    """
-
-    for char in module_name:
-        if char == '_':
-            continue
-        elif not char.isalpha() or char == ' ':
-            return False
-    return True
-
-
-def query_yes_no(question, default=None):
-
-    """
-    Queries the user for a yes/no answer to a given question
-
-    args:
-        question: The question the user is answering
-        default: The default answer if none is provided
-    """
-
-    valid = {"yes": True, "y": True, "ye": True,
-             "no": False, "n": False}
-    if default is None:
-        prompt = " [y/n] "
-    elif default == "yes":
-        prompt = " [Y/n] "
-    elif default == "no":
-        prompt = " [y/N] "
-    else:
-        raise ValueError("invalid default answer: '%s'" % default)
-
-    while True:
-        stdout.write(question + prompt)
-        choice = input().lower()
-        if default is not None and choice == '':
-            return valid[default]
-        elif choice in valid:
-            return valid[choice]
-        else:
-            stdout.write("Please respond with 'yes', 'no', 'y', or 'n'\n")
-
-
-class InitializeProject(object):
+class ProjectConstructor(object):
 
     # TODO: Finish documenting
 
@@ -75,21 +26,23 @@ class InitializeProject(object):
             set_active = self.__query_set_as_active(module_name)
 
             module_options = {
-                'name': module_name,
+                'module_name': module_name,
                 'yaml_name': yaml_name,
                 'yaml_path': yaml_path,
                 'case_correction': case_correction
             }
 
             manager.create_module(module_options, set_active=set_active)
-            manager.update_project()
+            manager.update_project_file()
 
-    def __query_confirmation(self):
+    @staticmethod
+    def __query_confirmation():
         working_dir = getcwd()
         question = 'Initialize a new ConPlex module in {}?'.format(working_dir)
         return query_yes_no(question, default=None)
 
-    def __query_yaml_path(self):
+    @staticmethod
+    def __query_yaml_path():
 
         while True:
             yaml_path = input('Please provide the path to your YAML configuration file: ')
@@ -98,22 +51,26 @@ class InitializeProject(object):
             else:
                 pt.notice('It seems the path you proved is not a valid YAML file')
 
-    def __query_use_default_module_name(self, default):
-        question = 'Do you want to use the name from your YAML file({}) for this module? '.format(default)
+    @staticmethod
+    def __query_use_default_module_name(default):
+        question = 'Do you want to use the name from your YAML file ({}) for this module? '.format(default)
         return query_yes_no(question, default='yes')
 
-    def __query_module_name(self):
+    @staticmethod
+    def __query_module_name():
         while True:
-            module_name = input('Please provide a module name : ')
+            module_name = input('Please provide a module name: ')
             if module_name and validate_module_name(module_name):
                 return module_name
             else:
                 pt.notice('The module name provided is invalid. Please remove any spaces or special characters other than "_" and try again.')
 
-    def __query_use_case_correction(self):
+    @staticmethod
+    def __query_use_case_correction():
         question = 'Do you want to use automatic case correction for this module?'
         return query_yes_no(question, default='no')
 
-    def __query_set_as_active(self, module_name):
-        question = 'Do you want to set {} as the active ConPlex configuration?'.format(module_name)
+    @staticmethod
+    def __query_set_as_active(module_name):
+        question = 'Do you want to set "{}" as the active ConPlex configuration?'.format(module_name)
         return query_yes_no(question, default='yes')

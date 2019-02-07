@@ -2,7 +2,7 @@
 
 import PrintTags as pt
 from argparse import ArgumentParser
-from ..project_manager import ProjectManager
+from conplex.core.project_manager import ProjectManager
 
 
 class Arguments:
@@ -35,30 +35,41 @@ class CLI(object):
 
         if args.selector == Arguments.init:
             self.__initialize()
-        if args.selector == Arguments.list:
+        elif args.selector == Arguments.list:
             self.__list()
-        if args.selector == Arguments.active:
+        elif args.selector == Arguments.active:
             self.__active()
+        elif args.selector == Arguments.delete:
+            self.__delete()
 
     def __initialize(self):
 
         # TODO: Finish print
 
-        from conplex.cli.initialize_project import InitializeProject
-        InitializeProject(self.__manager)
+        from .initialize_project import ProjectConstructor
+        ProjectConstructor(self.__manager)
         pt.success('')
 
     def __list(self):
 
-        modules = self.__manager.list_modules()
+        modules = self.__manager.modules
+        if not len(modules):
+            pt.info('There are no ConPlex configurations in this project')
+            return
         print('\n')
         for i, module in enumerate(modules, 1):
-            pt.green('{}. {} | {}'.format(i, module['name'], module['yaml_path']))
+            pt.green('{}. {} | {}'.format(i, module['module_name'], module['yaml_path']))
         print('\n')
 
     def __active(self):
 
-        active = self.__manager.active_module()
-        pt.green('\n{} is currently the active module\n'.format(active['name']))
+        active_module = self.__manager.active_module
+        if active_module is None:
+            pt.info('There no active ConPlex configurations in this project')
+            return
+        pt.green('\n"{}" is currently the active module\n'.format(active_module['module_name']))
 
-    
+    def __delete(self):
+        from .delete_project import DeleteProject
+        DeleteProject(self.__manager)
+        pt.success('')
